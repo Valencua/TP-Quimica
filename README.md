@@ -1,1 +1,1 @@
-# TP-Qu-mica
+# TP-Quimica
