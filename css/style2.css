@@ -22,7 +22,7 @@
   .ejemplo {
     width: 110px; /* Adjust the width as needed */
     height: 110px; /* Adjust the height as needed */
-    font-size: 0.6em;
+    font-size: 1.1em;
 }
   
   * {
@@ -154,7 +154,7 @@
   .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 90px);
-    grid-template-rows: repeat(auto, 90px);
+    grid-template-rows: repeat(2, 90px) 1fr 1fr;
     gap: 10px;
     justify-content: center;
   }
@@ -162,7 +162,7 @@
   .grid-container--bottom {
     display: grid;
     grid-template-columns: repeat(3, 90px);
-    grid-template-rows: repeat(auto, 90px);
+    grid-template-rows: repeat(1, 90px);
     gap: 10px;
     justify-content: center;
     margin-top: 40px;
@@ -196,8 +196,8 @@
   
     .grid-container--bottom {
       display: grid;
-      grid-template-columns: repeat(14, 90px);
-      grid-template-rows: repeat(2, 90px);
+      grid-template-columns: repeat(14, 60px);
+      grid-template-rows: repeat(7, 60px);
     }
   
     .grid-items:hover{
