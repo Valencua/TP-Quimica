@@ -1,18 +1,18 @@
 :root {
     /* Cellding colors */
-    --noble-gases: #00c853;
-    --transition-metals: #80d8ff;
-    --halogens: #b2ff59;
-    --alkaline-earth: #ffc400;
-    --no-metals: #ff9100;
-    --alkali-metals: #1a237e;
-    --metalloids: #d32f2f;
-    --lanthanides: #90a6ae;
-    --other-metals: #7e57c2;
-    --actinides: #245a64;
+    --noble-gases: #A7D4F5;
+    --transition-metals: #D2E097;
+    --halogens: #E39EC3;
+    --alkaline-earth: #FFE1A7;
+    --no-metals: #B89DDB;
+    --alkali-metals: #F5C2A5;
+    --metalloids: #90DEA6;
+    --lanthanides: #ADDF7C;
+    --other-metals: #D3ED89;
+    --actinides: #9BDE90;
   
     /* Text color */
-    --ligth: #fafafa;
+    --ligth: #EEE1D0;
     --dark: #212121;
   
     /* Text Size */
@@ -20,8 +20,8 @@
     --symbol: 2em;
   }
   .ejemplo {
-    width: 60px; /* Adjust the width as needed */
-    height: 60px; /* Adjust the height as needed */
+    width: 110px; /* Adjust the width as needed */
+    height: 110px; /* Adjust the height as needed */
     font-size: 0.6em;
 }
   
@@ -48,7 +48,7 @@
 
   .noble-gases {
     background-color: var(--noble-gases);
-    color: var(--ligth);
+    color: var(--dark);
   }
   
   .transition-metals {
@@ -73,27 +73,27 @@
   
   .alkali-metals {
     background-color: var(--alkali-metals);
-    color: var(--ligth);
+    color: var(--dark);
   }
   
   .metalloids {
     background-color: var(--metalloids);
-    color: var(--ligth);
+    color: var(--dark);
   }
   
   .lanthanides {
     background-color: var(--lanthanides);
-    color: var(--var(--dark));
+    color: var(--dark);
   }
   
   .other-metals {
     background-color: var(--other-metals);
-    color: var(--ligth);
+    color: var(--dark);
   }
   
   .actinides {
     background-color: var(--actinides);
-    color: var(--ligth);
+    color: var(--dark);
   }
   
   /* -------------------------------------- Elements Style -------------------------------------- */
