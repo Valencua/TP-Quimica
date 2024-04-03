@@ -35,9 +35,7 @@
     margin-top: 2%;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-image:url("../img/Pantalla definitiva sin decoraciones _D.png");
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: #F2EFE8;
   }
   
   .title {
