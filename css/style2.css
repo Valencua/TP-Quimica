@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
 :root {
     /* Cellding colors */
     --noble-gases: #A7D4F5;
@@ -12,7 +13,7 @@
     --actinides: #9BDE90;
   
     /* Text color */
-    --ligth: #EEE1D0;
+    --ligth: #F2EFE8;
     --dark: #212121;
   
     /* Text Size */
@@ -31,10 +32,12 @@
   
   body {
     margin: 0;
-    margin-top: 10px;
+    margin-top: 2%;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: var(--ligth);
+    background-image:url("../img/Pantalla definitiva sin decoraciones _D.png");
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   
   .title {
@@ -161,12 +164,12 @@
   
   .grid-container--bottom {
     display: grid;
-    grid-template-columns: repeat(3, 90px);
-    grid-template-rows: repeat(1, 90px);
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(1, 60px);
     gap: 10px;
     justify-content: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 30px;
+    margin-bottom: 0;
   }
   
   /* Hidden sampler element to mobile version */
@@ -198,6 +201,7 @@
       display: grid;
       grid-template-columns: repeat(14, 60px);
       grid-template-rows: repeat(7, 60px);
+      height: 150px;
     }
   
     .grid-items:hover{
@@ -402,6 +406,72 @@
     .grid-items__name {
         font-size: 0.6em; /* Adjust the font size as needed */
     }
-    
-  }
-  
+    .padre-padre{
+        display: flex;
+        justify-content: center;
+        height: auto; /* Cambiado a una altura fija */
+    }
+    .padre{
+        display:grid;
+        height: 100px;
+        grid-template-columns: 1fr; /* Corregido el valor de grid-template-columns */
+        grid-template-rows: repeat(2, 1fr) 25%;
+        gap: 0; /* Elimina el espacio entre las secciones */
+    }  
+    .seccion{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        height: auto;
+        padding: 0px;
+        width: 100%;
+        margin:0;
+        flex: 1;
+    }
+    .valores{
+        justify-content: space-around;
+    }
+    img{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .caja{
+        margin:0px;
+        border: 4px solid #E0A186;
+        background: #EEE1D0;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+    }
+    .num{
+        width: 54px;
+        
+    }
+    .elemento{
+        width: 128px;
+    }
+    button{
+        font-family: Luckiest Guy, cursive;
+        color:#8F788B;
+        font-weight: 400;
+        line-height: 20px;
+        border: 4px solid #F5C2A5;
+        background: #EEE1D0;
+        width: 165.07px;
+        border-radius: 14px;
+        text-align: center;
+        width: 128px;
+        height: 45px;
+    }
+    .restart{
+        border: 4px solid #CDAEC7;
+        background: #EED0EB;
+    }
+}
+@media (max-width: 1440px) {
+    body{
+        background-size: 1520px 950px;
+    }
+}
