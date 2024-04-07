@@ -414,7 +414,7 @@
         height: 100px;
         grid-template-columns: 1fr; /* Corregido el valor de grid-template-columns */
         grid-template-rows: repeat(2, 1fr) 25%;
-        gap: 0; /* Elimina el espacio entre las secciones */
+        gap: 20px; /* Elimina el espacio entre las secciones */
     }  
     .seccion{
         display: flex;
@@ -448,9 +448,10 @@
         
     }
     .elemento{
-        width: 128px;
+        width: 400px;
     }
     button{
+        cursor:pointer;
         font-family: Luckiest Guy, cursive;
         color:#8F788B;
         font-weight: 400;
