@@ -52,7 +52,7 @@ def balance_equation():
         compoundDecipher(reactants[i],i,1, elementMatrix, elementList)
     for i in range(len(products)):
         compoundDecipher(products[i],i+len(reactants),-1, elementMatrix, elementList)
-        
+  
     elementMatrix = Matrix(elementMatrix)
     elementMatrix = elementMatrix.transpose()
     solution=elementMatrix.nullspace()[0]
