@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 
 # Diccionario de masas molares de los elementos
+
 MASAS_MOLARES = {
     "H": 1.01,
     "He": 4.00,
@@ -95,6 +96,37 @@ MASAS_MOLARES = {
     "U": 238.03
 }
 
+RESULT_EQ_BALANCEADA = ""
+
+def calcular_masa_molar(compound):
+
+    pattern = r'([A-Z][a-z]?)(\d*)|(\()|(\))(\d*)'
+    stack = []
+    total_molar_mass = 0
+    multiplier = 1
+
+    for match in re.finditer(pattern, compound):
+        element, count, open_paren, close_paren, close_count = match.groups()
+
+        if element:
+            count = int(count) if count else 1
+            stack.append(MASAS_MOLARES[element] * count)
+
+        elif open_paren:
+            stack.append('(')
+
+        elif close_paren:
+            temp_mass = 0
+            while stack[-1] != '(':
+                temp_mass += stack.pop()
+            stack.pop()  # remove '(' from stack
+            count = int(close_count) if close_count else 1
+            stack.append(temp_mass * count)
+
+    total_molar_mass = sum(stack)
+    return total_molar_mass
+
+
 def addToMatrix(element, index, count, side, elementMatrix, elementList):
     if(index == len(elementMatrix)):
        elementMatrix.append([])
@@ -131,23 +163,6 @@ def compoundDecipher(compound, index, side, elementMatrix, elementList):
             multiplier=1
         findElements(segment, index, multiplier, side, elementMatrix, elementList)
 
-def calcular_masa_molar(compound):
-
-    pattern = r"([A-Z][a-z]*)(\d*)"
-    matches = re.findall(pattern, compound)
-    print(matches)
-    total_masa_molar = 0
-    for (element, count) in matches:
-        if count == "":
-            count = 1
-        else:
-            count = int(count)
-        if element in MASAS_MOLARES:
-            total_masa_molar += MASAS_MOLARES[element] * count
-        else:
-            raise ValueError(f"Elemento {element} no se encontró en la tabla")
-    
-    return total_masa_molar
 # def calculate_molar_mass(compound):
 #     elements_and_numbers = re.split('([A-Z][a-z]?)', compound)
 #     molar_mass = 0
@@ -202,9 +217,12 @@ def balance_equation():
 
     result_label = tk.Label(result_window, text="Ecuación Balanceada:", bg="#F2EFE8", fg="#8F788B", font=("Luckiest Guy", 14, "bold"))
     result_label.pack(padx=10, pady=(20,5), anchor="center")
-
+    
+    
     result_equation = tk.Label(result_window, text=output, bg="#F2EFE8", fg="#8F788B", font=("Arial", 12, "bold"))
     result_equation.pack(padx=10, pady=(5,20), anchor="center")
+    # es donde guarda la ecuación balanceada
+    RESULT_EQ_BALANCEADA = output
 
     return_button = tk.Button(result_window, text="Volver", command=result_window.destroy, bg="#EED0EA", fg="#8F788B", bd=3, relief="groove", font=("Luckiest Guy", 12, "bold"), padx=10, pady=5)
     return_button.pack(padx=10, pady=(10,20), anchor="center")
@@ -219,10 +237,14 @@ def balance_equation():
     masses_label.pack(padx=10, pady=(20,5), anchor="center")
 
     stoichiometry_text = "Masas Molares:\n"
+    masses = {}
     for i in range(len(reactants)):
+        #molar_mass = calculate_molar_mass(reactants[i])
         molar_mass = calcular_masa_molar(reactants[i])
+        masses[reactants[i]] = molar_mass
         stoichiometry_text += f"{reactants[i]}: {molar_mass} g/mol\n"
     for i in range(len(products)):
+        #molar_mass = calculate_molar_mass(products[i])
         molar_mass = calcular_masa_molar(products[i])
         stoichiometry_text += f"{products[i]}: {molar_mass} g/mol\n"
 
@@ -231,6 +253,81 @@ def balance_equation():
 
     return_button = tk.Button(masses_window, text="Volver", command=masses_window.destroy, bg="#EED0EA", fg="#8F788B", bd=3, relief="groove", font=("Luckiest Guy", 12, "bold"), padx=10, pady=5)
     return_button.pack(padx=10, pady=(10,20), anchor="center")
+
+    reactivolimitante_window = tk.Toplevel(root)
+    reactivolimitante_window.title("Cálculo de reactivo limitante")
+    reactivolimitante_window.geometry("900x250")
+    reactivolimitante_window.configure(background="#F2EFE8")
+    result_label_eq = tk.Label(reactivolimitante_window, text=RESULT_EQ_BALANCEADA, bg="#F2EFE8", fg="#8F788B", font=("Luckiest Guy", 14, "bold"))
+    result_label_eq.pack(padx=10, pady=(20,5), anchor="center")
+    equation = RESULT_EQ_BALANCEADA
+    
+    limiting_reagent, max_moles_product, excess_reagents = find_limiting_reagent(equation, masses)
+    label_result_react_limitante = f"El límite de reactivo es {limiting_reagent} y este puede producir un maximo de {max_moles_product} moles de producto. \n Y al reactivo en exceso {list(excess_reagents.keys())[0]} le sobran {list(excess_reagents.values())[0]} moles"
+
+    result_label_calculo_rl = tk.Label(reactivolimitante_window, text=label_result_react_limitante, bg="#F2EFE8", fg="#8F788B", font=("Luckiest Guy", 14, "bold"))
+    result_label_calculo_rl.pack(padx=10, pady=(20,5), anchor="center")
+
+def calculate_moles(mass, molar_mass):
+    return mass / molar_mass
+
+def parse_equation(equation):
+    reactants_part, products_part = equation.split('->')
+    reactants = reactants_part.split('+')
+    products = products_part.split('+')
+    
+    reactants = [r.strip() for r in reactants]
+    products = [p.strip() for p in products]
+    
+    return reactants, products
+
+def extract_compound_data(compound):
+    pattern = r"(\d*)([A-Za-z0-9\(\)]+)"
+    matches = re.match(pattern, compound.strip())
+    
+    coefficient = int(matches.group(1)) if matches.group(1) else 1
+    formula = matches.group(2)
+    
+    return coefficient, formula
+
+def find_limiting_reagent(equation, masses):
+    reactants, products = parse_equation(equation)
+    
+    reactant_data = [extract_compound_data(reactant) for reactant in reactants]
+    product_data = [extract_compound_data(product) for product in products]
+    
+    # Calculate molar masses for each reactant and product
+    molar_masses = {formula: calcular_masa_molar(formula) for _, formula in reactant_data + product_data}
+    
+    # Check if all reactants are in the masses dictionary
+    for _, formula in reactant_data:
+        if formula not in masses:
+            raise KeyError(f"Mass for reactant {formula} not provided.")
+    
+    # Calculate moles for each reactant using the provided masses
+    moles_reagents = {formula: calculate_moles(masses[formula], molar_masses[formula]) for _, formula in reactant_data}
+    
+    # Determine the stoichiometric ratios
+    reagent_ratios = {formula: coef for coef, formula in reactant_data}
+    
+    # Find the limiting reagent
+    limiting_reagent = None
+    max_moles_product = float('inf')
+    
+    for formula, moles in moles_reagents.items():
+        max_moles_for_reagent = moles / reagent_ratios[formula]
+        if max_moles_for_reagent < max_moles_product:
+            max_moles_product = max_moles_for_reagent
+            limiting_reagent = formula
+    
+    # Calculate the amount of excess reagent left
+    excess_reagents = {}
+    for formula, moles in moles_reagents.items():
+        if formula != limiting_reagent:
+            moles_used = reagent_ratios[formula] * max_moles_product
+            excess_reagents[formula] = moles - moles_used
+    
+    return limiting_reagent, max_moles_product, excess_reagents
 
 root = tk.Tk()
 root.title("Balanceador de ecuaciones químicas")
@@ -255,5 +352,14 @@ products_label.place(relx=0.5, rely=0.5, anchor="center", y=30)
 products_entry.place(relx=0.5, rely=0.6, anchor="center", y=60)
 balance_button.place(relx=0.5, rely=0.8, anchor="center", y=70)
 
-print(calcular_masa_molar("CH4"))
+# Prueba calcular masa molar
+
+
+
+# root = tk.Tk()
+# root.title("Calculo del reactivo limitante")
+
+# root.configure(background="#F2EFE8")
+# root.geometry("500x600")
+
 root.mainloop()
