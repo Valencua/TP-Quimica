@@ -1,9 +1,16 @@
 import re
 from sympy import Matrix, lcm 
+import sympy as sp
 import tkinter as tk
 from tkinter import messagebox
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
+# Variables para calculos de ecuaciones
+x = sp.symbols('x')
+R = 0.0821 
+P, V, T = sp.symbols('P V T')
 
 # Diccionario de masas molares de los elementos
 
@@ -163,22 +170,6 @@ def compoundDecipher(compound, index, side, elementMatrix, elementList):
             multiplier=1
         findElements(segment, index, multiplier, side, elementMatrix, elementList)
 
-# def calculate_molar_mass(compound):
-#     elements_and_numbers = re.split('([A-Z][a-z]?)', compound)
-#     molar_mass = 0
-#     i = 0
-#     while i < len(elements_and_numbers) - 1:
-#         i += 1
-#         if len(elements_and_numbers[i]) > 0:
-#             element = elements_and_numbers[i]
-#             if elements_and_numbers[i + 1].isdigit():
-#                 count = int(elements_and_numbers[i + 1])
-#                 molar_mass += atomic_masses[element] * count
-#                 i += 1
-#             else:
-#                 molar_mass += atomic_masses[element]
-#     return molar_mass
-
 def balance_equation():
     elementMatrix = []  
     elementList = []    
@@ -329,6 +320,89 @@ def find_limiting_reagent(equation, masses):
     
     return limiting_reagent, max_moles_product, excess_reagents
 
+# Funciones para el calculo de las ecuaciones de gases ideales
+def leer_valor(mensaje):
+    while True:
+        try:
+            valor = input(mensaje)
+            if valor == "":
+                return None
+            else:
+                return float(valor)
+        except ValueError:
+            print("Por favor, ingrese un valor numérico o deje en blanco para omitir.")
+def gases_compleja():
+    reactivos = []
+    R = 0.0821  
+    P, V, n, T = sp.symbols('P V n T')
+    ecuacion = sp.Eq(P * V, n * R * T)
+   
+    print(f"Ingrese los valores del reactivo")
+    nombre = input("Ingrese el nombre del reactivo: ")
+    simbolo_quimico = input("Ingrese el símbolo químico del elemento: ")
+    presion = leer_valor("Ingrese el valor de la presión (en atm): ")
+    volumen = leer_valor("Ingrese el valor del volumen (en L): ")
+    moles = leer_valor("Ingrese la cantidad de moles: ")
+    temperatura = leer_valor("Ingrese el valor de la temperatura (en K): ")
+    reactivos.append((nombre, simbolo_quimico, presion, volumen, moles, temperatura))
+
+
+    if presion is None:
+        solucion = sp.solve(ecuacion.subs({V: volumen, n: moles, T: temperatura}), P)
+    elif volumen is None:
+        solucion = sp.solve(ecuacion.subs({P: presion, n: moles, T: temperatura}), V)
+    elif moles is None:
+        solucion = sp.solve(ecuacion.subs({P: presion, V: volumen, T: temperatura}), n)
+    elif temperatura is None:
+        solucion = sp.solve(ecuacion.subs({P: presion, V: volumen, n: moles}), T)
+    else:
+        print("Todos los valores son conocidos, no hay nada que resolver.")
+
+
+    print(solucion)
+    return solucion
+def gases_simple():
+    reactivos = {}
+
+
+    print("Ingrese los valores del primer estado del reactivo")
+    presion1 = leer_valor("Ingrese el valor de la presión (en atm): ")
+    volumen1 = leer_valor("Ingrese el valor del volumen (en L): ")
+    temperatura1 = leer_valor("Ingrese el valor de la temperatura (en K): ")
+
+
+    print("Ingrese los valores del segundo estado del reactivo")
+    presion2 = leer_valor("Ingrese el valor de la presión (en atm): ")
+    volumen2 = leer_valor("Ingrese el valor del volumen (en L): ")
+    temperatura2 = leer_valor("Ingrese el valor de la temperatura (en K): ")
+
+
+    reactivos['estado1'] = {'presion': presion1, 'volumen': volumen1, 'temperatura': temperatura1}
+    reactivos['estado2'] = {'presion': presion2, 'volumen': volumen2, 'temperatura': temperatura2}
+
+
+    if presion1 is None:
+        ecuacion = sp.Eq(x * volumen1 / temperatura1, presion2 * volumen2 / temperatura2)
+    elif volumen1 is None:
+        ecuacion = sp.Eq(presion1 * x / temperatura1, presion2 * volumen2 / temperatura2)
+    elif temperatura1 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / x, presion2 * volumen2 / temperatura2)
+    elif presion2 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, x * volumen2 / temperatura2)
+    elif volumen2 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, presion2 * x / temperatura2)
+    elif temperatura2 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, presion2 * volumen2 / x)
+    else:
+        print("Todos los valores son conocidos, no hay nada que resolver.")
+        ecuacion = None
+    solucion = sp.solve(ecuacion, x)
+    print(f"La solución para el valor desconocido es: {solucion}")
+
+
+    return solucion
+
+
 root = tk.Tk()
 root.title("Balanceador de ecuaciones químicas")
 
@@ -352,14 +426,5 @@ products_label.place(relx=0.5, rely=0.5, anchor="center", y=30)
 products_entry.place(relx=0.5, rely=0.6, anchor="center", y=60)
 balance_button.place(relx=0.5, rely=0.8, anchor="center", y=70)
 
-# Prueba calcular masa molar
-
-
-
-# root = tk.Tk()
-# root.title("Calculo del reactivo limitante")
-
-# root.configure(background="#F2EFE8")
-# root.geometry("500x600")
 
 root.mainloop()
