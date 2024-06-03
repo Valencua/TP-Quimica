@@ -457,8 +457,18 @@ def call_gases_simple():
         volumen2 = None
     else:
         volumen2 = float(volumen2)
+    moles1 = gases_simples_input_moles_inicial.get()
+    if moles1 == "":
+        moles1 = None
+    else : 
+        moles1 = float(moles1)
+    moles2 = gases_simples_input_moles_final.get()
+    if moles2 == "":
+        moles2 = None
+    else : 
+        moles2 = float(moles2)
 
-    resultado_gases_simple = gases_simple(presion1, volumen1, temperatura1, presion2, volumen2, temperatura2)
+    resultado_gases_simple = gases_simple(presion1, volumen1, moles1, temperatura1, presion2, volumen2, moles2, temperatura2)
     gases_simples_label_resultado.config(text=resultado_gases_simple)
 
 root = tk.Tk()
