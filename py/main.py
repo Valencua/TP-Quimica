@@ -359,7 +359,7 @@ def gases_compleja(nombre, simbolo_quimico,presion,volumen,moles,temperatura):
         return "Todos los valores son conocidos, no hay nada que resolver."
     #print(solucion)
     return solucion
-def gases_simple(presion1, volumen1, temperatura1, presion2, volumen2, temperatura2):
+def gases_simple(presion1, volumen1, moles1, temperatura1, presion2, volumen2, moles2, temperatura2):
     reactivos = {}
 
     # print("Ingrese los valores del primer estado del reactivo")
@@ -372,21 +372,25 @@ def gases_simple(presion1, volumen1, temperatura1, presion2, volumen2, temperatu
     # volumen2 = leer_valor("Ingrese el valor del volumen (en L): ")
     # temperatura2 = leer_valor("Ingrese el valor de la temperatura (en K): ")
 
-    reactivos['estado1'] = {'presion': presion1, 'volumen': volumen1, 'temperatura': temperatura1}
-    reactivos['estado2'] = {'presion': presion2, 'volumen': volumen2, 'temperatura': temperatura2}
+    reactivos['estado1'] = {'presion1': presion1, 'volumen1': volumen1, 'moles1': moles1, 'temperatura1': temperatura1}
+    reactivos['estado2'] = {'presion2': presion2, 'volumen2': volumen2, 'moles2': moles2, 'temperatura2': temperatura2}
 
     if presion1 is None:
-        ecuacion = sp.Eq(x * volumen1 / temperatura1, presion2 * volumen2 / temperatura2)
+        ecuacion = sp.Eq(x * volumen1 / moles1 * temperatura1, presion2 * volumen2 / moles2 * temperatura2)
     elif volumen1 is None:
-        ecuacion = sp.Eq(presion1 * x / temperatura1, presion2 * volumen2 / temperatura2)
+        ecuacion = sp.Eq(presion1 * x / moles1 * temperatura1, presion2 * volumen2 / moles2 * temperatura2)
+    elif moles1 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / x * temperatura1, presion2 * volumen2 / moles2 * temperatura2)
     elif temperatura1 is None:
-        ecuacion = sp.Eq(presion1 * volumen1 / x, presion2 * volumen2 / temperatura2)
+        ecuacion = sp.Eq(presion1 * volumen1 / moles1 * x, presion2 * volumen2 / moles2 * temperatura2)
     elif presion2 is None:
-        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, x * volumen2 / temperatura2)
+        ecuacion = sp.Eq(presion1 * volumen1 / moles1 * temperatura1, x * volumen2 / moles2 * temperatura2)
     elif volumen2 is None:
-        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, presion2 * x / temperatura2)
+        ecuacion = sp.Eq(presion1 * volumen1 / moles1 * temperatura1, presion2 * x / moles2 * temperatura2)
+    elif moles2 is None:
+        ecuacion = sp.Eq(presion1 * volumen1 / moles1 * temperatura1, presion2 * volumen2 / x * temperatura2)
     elif temperatura2 is None:
-        ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, presion2 * volumen2 / x)
+        ecuacion = sp.Eq(presion1 * volumen1 / moles1 * temperatura1, presion2 * volumen2 / moles2 * x)
     else:
         #print("Todos los valores son conocidos, no hay nada que resolver.")
         ecuacion = None
