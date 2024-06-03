@@ -360,25 +360,21 @@ def gases_compleja(nombre, simbolo_quimico,presion,volumen,moles,temperatura):
         return "Todos los valores son conocidos, no hay nada que resolver."
     #print(solucion)
     return solucion
-def gases_simple():
+def gases_simple(presion1, volumen1, temperatura1, presion2, volumen2, temperatura2):
     reactivos = {}
 
+    # print("Ingrese los valores del primer estado del reactivo")
+    # presion1 = leer_valor("Ingrese el valor de la presión (en atm): ")
+    # volumen1 = leer_valor("Ingrese el valor del volumen (en L): ")
+    # temperatura1 = leer_valor("Ingrese el valor de la temperatura (en K): ")
 
-    print("Ingrese los valores del primer estado del reactivo")
-    presion1 = leer_valor("Ingrese el valor de la presión (en atm): ")
-    volumen1 = leer_valor("Ingrese el valor del volumen (en L): ")
-    temperatura1 = leer_valor("Ingrese el valor de la temperatura (en K): ")
-
-
-    print("Ingrese los valores del segundo estado del reactivo")
-    presion2 = leer_valor("Ingrese el valor de la presión (en atm): ")
-    volumen2 = leer_valor("Ingrese el valor del volumen (en L): ")
-    temperatura2 = leer_valor("Ingrese el valor de la temperatura (en K): ")
-
+    # print("Ingrese los valores del segundo estado del reactivo")
+    # presion2 = leer_valor("Ingrese el valor de la presión (en atm): ")
+    # volumen2 = leer_valor("Ingrese el valor del volumen (en L): ")
+    # temperatura2 = leer_valor("Ingrese el valor de la temperatura (en K): ")
 
     reactivos['estado1'] = {'presion': presion1, 'volumen': volumen1, 'temperatura': temperatura1}
     reactivos['estado2'] = {'presion': presion2, 'volumen': volumen2, 'temperatura': temperatura2}
-
 
     if presion1 is None:
         ecuacion = sp.Eq(x * volumen1 / temperatura1, presion2 * volumen2 / temperatura2)
@@ -393,11 +389,11 @@ def gases_simple():
     elif temperatura2 is None:
         ecuacion = sp.Eq(presion1 * volumen1 / temperatura1, presion2 * volumen2 / x)
     else:
-        print("Todos los valores son conocidos, no hay nada que resolver.")
+        #print("Todos los valores son conocidos, no hay nada que resolver.")
         ecuacion = None
+        return "Todos los valores son conocidos, no hay nada que resolver."
+        
     solucion = sp.solve(ecuacion, x)
-    print(f"La solución para el valor desconocido es: {solucion}")
-
 
     return solucion
 
@@ -418,10 +414,49 @@ def call_gases_compleja():
     temperatura = gases_input_temperatura.get()
     if temperatura == "":
         temperatura = None
-    
 
     resultado_gases_compleja = gases_compleja(nombre,simbolo_quimico,presion,volumen, moles, temperatura)
-    gases_label_resultado.config(text=resultado_gases_compleja)
+    gases_complejos_label_resultado.config(text=resultado_gases_compleja)
+
+def call_gases_simple():
+    temperatura1 = gases_simples_input_temperatura_inicial.get()
+    if temperatura1 == "":
+        temperatura1 = None
+    else : 
+        temperatura1 = float(temperatura1)
+
+    temperatura2 = gases_simples_input_temperatura_final.get()
+    if temperatura2 == "":
+        temperatura2 = None
+    else :
+        temperatura2 = float(temperatura2)
+
+    presion1 = gases_simples_input_presion_inicial.get()
+    if presion1 == "":
+        presion1 = None
+    else:
+        presion1 = float(presion1)
+    
+    presion2 = gases_simples_input_presion_final.get()
+    if presion2 == "":
+        presion2 = None
+    else:
+        presion2 = float(presion2)
+
+    volumen1 = gases_simples_input_volumen_inicial.get()
+    if volumen1 == "":
+        volumen1 = None
+    else:
+        volumen1 = float(volumen1)
+
+    volumen2 = gases_simples_input_volumen_final.get()
+    if volumen2 == "":
+        volumen2 = None
+    else:
+        volumen2 = float(volumen2)
+
+    resultado_gases_simple = gases_simple(presion1, volumen1, temperatura1, presion2, volumen2, temperatura2)
+    gases_simples_label_resultado.config(text=resultado_gases_simple)
 
 root = tk.Tk()
 root.title("Balanceador de ecuaciones químicas")
@@ -480,12 +515,72 @@ gases_label_temperatura.grid(row=5, column=0, sticky="e", padx=5, pady=5)
 gases_input_temperatura = tk.Entry(ventana_gases_complejos, width=40, bd=2, relief="groove", font=("Luckiest Guy", 12))
 gases_input_temperatura.grid(row=5, column=1, padx=5, pady=5)
 
-gases_button = tk.Button(ventana_gases_complejos, text="Calcular", command=call_gases_compleja, bg="#EED0EA", fg="#8F788B", bd=5, relief="groove", font=("Luckiest Guy", 12, "bold"), padx=10, pady=10)
-gases_button.grid(row=6, column=0, columnspan=2, pady=20)
+gases_complejos_button = tk.Button(ventana_gases_complejos, text="Calcular", command=call_gases_compleja, bg="#EED0EA", fg="#8F788B", bd=5, relief="groove", font=("Luckiest Guy", 12, "bold"), padx=10, pady=10)
+gases_complejos_button.grid(row=6, column=0, columnspan=3, pady=20)
 
-gases_label_resultado = tk.Label(ventana_gases_complejos, text="RESULTADO", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
-gases_label_resultado.grid(row=7, column=0, columnspan=2, pady=20)
+gases_complejos_label_resultado = tk.Label(ventana_gases_complejos, text="RESULTADO", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_complejos_label_resultado.grid(row=7, column=0, columnspan=3, pady=20)
+
+
+# Ventana terciaria para el calculador de gases ideales simples
+ventana_gases_simples = tk.Tk()
+ventana_gases_simples.title("Calculador de gases ideales simples")
+ventana_gases_simples.configure(background="#F2EFE8")
+ventana_gases_simples.geometry("700x500")
+
+# Configurar la rejilla para que los widgets se expandan con la ventana
+ventana_gases_simples.columnconfigure(0, weight=1)
+ventana_gases_simples.columnconfigure(1, weight=1)
+ventana_gases_simples.columnconfigure(2, weight=1)
+
+# Crear y colocar los labels y entries en la rejilla
+gases_simples_label_reactivo_nombre = tk.Label(ventana_gases_simples, text="Ingrese el nombre del reactivo", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_reactivo_nombre.grid(row=0, column=0, sticky="e", padx=5, pady=5)
+gases_simples_input_reactivo_nombre = tk.Entry(ventana_gases_simples, width=40, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_reactivo_nombre.grid(row=0, column=1, columnspan=2, padx=5, pady=5)
+
+gases_simples_label_reactivo_simbolo = tk.Label(ventana_gases_simples, text="Ingrese el símbolo químico del reactivo", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_reactivo_simbolo.grid(row=1, column=0, sticky="e", padx=5, pady=5)
+gases_simples_input_reactivo_simbolo = tk.Entry(ventana_gases_simples, width=40, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_reactivo_simbolo.grid(row=1, column=1, columnspan=2, padx=5, pady=5)
+
+# Agregar los títulos "Inicial" y "Final"
+titulo_inicial = tk.Label(ventana_gases_simples, text="Inicial", font=("Luckiest Guy", 12, "bold"), bg="#F2EFE8")
+titulo_inicial.grid(row=2, column=1, padx=5, pady=5)
+
+titulo_final = tk.Label(ventana_gases_simples, text="Final", font=("Luckiest Guy", 12, "bold"), bg="#F2EFE8")
+titulo_final.grid(row=2, column=2, padx=5, pady=5)
+
+# Crear y colocar los labels y entries para presión, volumen y temperatura en la rejilla
+gases_simples_label_presion = tk.Label(ventana_gases_simples, text="Presión (atm)", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_presion.grid(row=3, column=0, sticky="e", padx=5, pady=5)
+gases_simples_input_presion_inicial = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_presion_inicial.grid(row=3, column=1, padx=5, pady=5)
+gases_simples_input_presion_final = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_presion_final.grid(row=3, column=2, padx=5, pady=5)
+
+gases_simples_label_volumen = tk.Label(ventana_gases_simples, text="Volumen (L)", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_volumen.grid(row=4, column=0, sticky="e", padx=5, pady=5)
+gases_simples_input_volumen_inicial = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_volumen_inicial.grid(row=4, column=1, padx=5, pady=5)
+gases_simples_input_volumen_final = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_volumen_final.grid(row=4, column=2, padx=5, pady=5)
+
+gases_simples_label_temperatura = tk.Label(ventana_gases_simples, text="Temperatura (K)", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_temperatura.grid(row=5, column=0, sticky="e", padx=5, pady=5)
+gases_simples_input_temperatura_inicial = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_temperatura_inicial.grid(row=5, column=1, padx=5, pady=5)
+gases_simples_input_temperatura_final = tk.Entry(ventana_gases_simples, width=20, bd=2, relief="groove", font=("Luckiest Guy", 12))
+gases_simples_input_temperatura_final.grid(row=5, column=2, padx=5, pady=5)
+
+gases_simples_button = tk.Button(ventana_gases_simples, text="Calcular", command=call_gases_simple, bg="#EED0EA", fg="#8F788B", bd=5, relief="groove", font=("Luckiest Guy", 12, "bold"), padx=10, pady=10)
+gases_simples_button.grid(row=6, column=0, columnspan=3, pady=20)
+
+gases_simples_label_resultado = tk.Label(ventana_gases_simples, text="RESULTADO", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_resultado.grid(row=7, column=0, columnspan=3, pady=20)
+
 
 # Iniciar el loop principal de la aplicación
 root.mainloop()
 ventana_gases_complejos.mainloop()
+ventana_gases_simples.mainloop()
