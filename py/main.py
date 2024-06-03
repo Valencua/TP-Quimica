@@ -110,7 +110,6 @@ def calcular_masa_molar(compound):
     pattern = r'([A-Z][a-z]?)(\d*)|(\()|(\))(\d*)'
     stack = []
     total_molar_mass = 0
-    multiplier = 1
 
     for match in re.finditer(pattern, compound):
         element, count, open_paren, close_paren, close_count = match.groups()
@@ -360,6 +359,8 @@ def gases_compleja(nombre, simbolo_quimico,presion,volumen,moles,temperatura):
         return "Todos los valores son conocidos, no hay nada que resolver."
     #print(solucion)
     return solucion
+
+
 def gases_simple():
     reactivos = {}
 
