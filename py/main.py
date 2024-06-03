@@ -531,7 +531,7 @@ ventana_gases_simples.columnconfigure(1, weight=1)
 ventana_gases_simples.columnconfigure(2, weight=1)
 
 # Crear y colocar los labels y entries en la rejilla
-gases_simples_label_reactivo_nombre = tk.Label(ventana_gases_simples, text="Si el valor es desconocido y constante, insertar constante. Si es desconocido dejarlo vacío.", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
+gases_simples_label_reactivo_nombre = tk.Label(ventana_gases_simples, text="Si el valor es desconocido y constante, insertar 1 en inicial y final. Si es desconocido dejarlo vacío.", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
 gases_simples_label_reactivo_nombre.grid(row=0, column=0, columnspan=3, padx=5, pady=5)
 
 gases_simples_label_reactivo_simbolo = tk.Label(ventana_gases_simples, text="Ingrese el símbolo químico de la sustancia", bg="#EEE1D0", bd=2, relief="groove", padx=10, pady=10, font=("Luckiest Guy", 12))
