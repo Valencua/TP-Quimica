@@ -162,6 +162,9 @@ def main(): #main
     react = " + ".join([*reactivos])
     prod  = " + ".join([*productos])
 
+    if react == prod:
+        pass
+
 
     try:  #Inenta generar (chemlib viene con una clase y si no puede generar esa clase es poque el compuesto no existe) la reaccion quimica mediante la formula
         reaccion = Reaction.by_formula(react + "-->" + prod)
