@@ -5,6 +5,25 @@ productos: dict[str: compound] = {}
 
 r = 0.082
 
+def get_by_MM():
+    compuestos = [x for x in reactivos.keys() if reactivos[x]["MM"] is not None and reactivos[x]['V'] is not None] + [x for x in productos.keys() if productos[x]["MM"] is not None and productos[x]['V'] is not None]
+    if len(compuestos) == 0: return
+    
+    for compuesto in compuestos:
+        if compuesto in [*reactivos]: reactivos[compuesto]["mol"] = reactivos[compuesto]["V"] * reactivos[compuesto]["MM"]
+        else: productos[compuesto]["mol"] = productos[compuesto]["V"] * productos[compuesto]["MM"]
+    return
+
+def get_by_MMol():
+    compuestos = [x for x in reactivos.keys() if reactivos[x]["mol"] is not None and reactivos[x]['MM'] is not None] + [x for x in productos.keys() if productos[x]["mol"] is not None and productos[x]['MM'] is not None]
+
+    if len(compuestos) == 0: return
+    
+    for compuesto in compuestos:
+        if compuesto in [*reactivos]: reactivos[compuesto]["V"] = reactivos[compuesto]["mol"] / reactivos[compuesto]["MM"]
+        else: productos[compuesto]["V"] = productos[compuesto]["mol"] / productos[compuesto]["MM"]
+    return
+
 def get_PVT():
     compuestos = [*reactivos, *productos]
 
@@ -23,7 +42,6 @@ def get_PVT():
         
         if V is None: 
             V = n * T * r / P
-            print (V, compuesto, [*reactivos])
             if compuesto in [*reactivos]: reactivos[compuesto]["V"] = V
             elif compuesto in [*productos]: productos[compuesto]["V"] = V
     
@@ -41,7 +59,6 @@ def get_masses(reaction: Reaction): #en base a una reacion, una cantidad (de mol
         return False
     
     compuesto = compuestos[0]
-    print(compuesto, reactivos[compuesto]["mol"])
 
     #esta funcion habria que cambiarla para que no acepte mas data que la reaccion. deberia funcionar checkeando si exsiten compuestos con n (mol) o gr que tengan valores definidos
     
@@ -100,7 +117,22 @@ def get_mass_by_PVT(reaction: Reaction): #saca la masa de un compuesto en base a
 
     return True
 
-
+def lim_reag(reaction: Reaction):
+    if len([*reactivos]) > 1:
+        a = [x for x in [*reactivos] if reactivos[x]["mol"] is not None]
+        b = [reactivos[x]["mol"] for x in a]
+        print(x for x in a)
+        print(a, b)
+        if len(a) == len([*reactivos]):
+            l = reaction.limiting_reagent(*b, mode = 'moles')
+            print(l)
+            return
+    
+        print("no se puede calcular el reactivo limitante")
+        return
+        
+    print("No hay reactivo limitante en una reaccion de un único reactivo")
+    return
 
 
 def main(): #main
@@ -123,7 +155,7 @@ def main(): #main
                 "P":   None if P == '' else float(P),
                 "V":   None if V == '' else float(V),
                 "T":   None if T == '' else float(T),
-                "MM":  None if MM == '' else float(T),
+                "MM":  None if MM == '' else float(MM),
             }
             
             return main()
@@ -174,8 +206,12 @@ def main(): #main
         return
     
     get_mass_by_PVT(reaccion) #aca va una escaera de intento de conseguir la data. se reiteran funciones hasta que se consiga la data necesaria o toda la que se pueda.
-    get_masses(reaccion) 
-    get_PVT() 
+    get_masses(reaccion)
+    get_by_MM()
+    get_by_MMol()
+    get_PVT()
+    lim_reag(reaccion)
+
     
     print(reactivos, "\n\n", productos)
     return
