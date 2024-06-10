@@ -1,5 +1,5 @@
 from chemlib import Compound, Reaction
-compound = dict["c":Compound, "mol":float, "gr": float, "P": float, "V": float, "T": float, "MM": float]
+compound = dict["mol":float, "gr": float, "P": float, "V": float, "T": float, "MM": float]
 reactivos: dict[str: compound] = {}
 productos: dict[str: compound] = {}
 
@@ -125,78 +125,67 @@ def lim_reag(reaction: Reaction):
         print(a, b)
         if len(a) == len([*reactivos]):
             l = reaction.limiting_reagent(*b, mode = 'moles')
-            print(l)
-            return
+            return l
     
-        print("no se puede calcular el reactivo limitante")
-        return
+        return "No se puede calcular el reactivo limitante"
         
-    print("No hay reactivo limitante en una reaccion de un único reactivo")
+    return "No hay reactivo limitante en una reaccion de un único reactivo"
+
+
+
+
+
+# Vos tenes que codeart el menu y las funciones de agregar reactivos y productos en abse a los de aca aaaj, es bastanter intuitivo creo. Las parttes de input se remplazan por los inputs de tkinter
+
+
+
+def agregar_reactivos():
+    c   = input("Ingrese el reactivo: ")
+    mol = input("Ingrese la cantidad de moles: ")
+    gr  = input("Ingrese la cantidad de gramos: ")
+    P   = input("Ingrese la presion: ")
+    V   = input("Ingrese el volumen: ")
+    T   = input("Ingrese la temperatura: ")
+    MM   = input("Ingrese la concentración molar: ")
+    
+    reactivos[Compound(c).formula] = {
+        "mol": None if mol == '' else float(mol),
+        "gr":  None if gr == '' else float(gr),
+        "P":   None if P == '' else float(P),
+        "V":   None if V == '' else float(V),
+        "T":   None if T == '' else float(T),
+        "MM":  None if MM == '' else float(MM),
+    }
+
+    return
+        
+            
+def agregar_productos():
+    c   = input("Ingrese el producto: ")
+    mol = input("Ingrese la cantidad de moles: ")
+    gr  = input("Ingrese la cantidad de gramos: ")
+    P   = input("Ingrese la presion: ")
+    V   = input("Ingrese el volumen: ")
+    T   = input("Ingrese la temperatura: ")
+    MM   = input("Ingrese la concentración molar: ")
+
+    
+    productos[Compound(c).formula] = {
+        "mol": None if mol == '' else float(mol),
+        "gr":  None if gr == '' else float(gr),
+        "P":   None if P == '' else float(P),
+        "V":   None if V == '' else float(V),
+        "T":   None if T == '' else float(T),
+        "MM":  None if MM == '' else float(MM),
+    }
+
     return
 
 
-def main(): #main
 
-    match input("\n1.Ingresar reactivo \n2.Ingresar producto \n3.Calcular \n"): #Input de datos. podría estar mejor? si. Tengo sueño? tmb
-         
-        case "1":
-            c   = input("Ingrese el reactivo: ")
-            mol = input("Ingrese la cantidad de moles: ")
-            gr  = input("Ingrese la cantidad de gramos: ")
-            P   = input("Ingrese la presion: ")
-            V   = input("Ingrese el volumen: ")
-            T   = input("Ingrese la temperatura: ")
-            MM   = input("Ingrese la concentración molar: ")
-            
-            reactivos[Compound(c).formula] = {
-                "c":   Compound(c), 
-                "mol": None if mol == '' else float(mol),
-                "gr":  None if gr == '' else float(gr),
-                "P":   None if P == '' else float(P),
-                "V":   None if V == '' else float(V),
-                "T":   None if T == '' else float(T),
-                "MM":  None if MM == '' else float(MM),
-            }
-            
-            return main()
-            
-        case "2":
-            c   = input("Ingrese el producto: ")
-            mol = input("Ingrese la cantidad de moles: ")
-            gr  = input("Ingrese la cantidad de gramos: ")
-            P   = input("Ingrese la presion: ")
-            V   = input("Ingrese el volumen: ")
-            T   = input("Ingrese la temperatura: ")
-            MM   = input("Ingrese la concentración molar: ")
-
-            
-            productos[Compound(c).formula] = {
-                "c":   Compound(c), 
-                "mol": None if mol == '' else float(mol),
-                "gr":  None if gr == '' else float(gr),
-                "P":   None if P == '' else float(P),
-                "V":   None if V == '' else float(V),
-                "T":   None if T == '' else float(T),
-                "MM":  None if MM == '' else float(MM),
-            }
-
-            return main()
-            
-        case "3":
-            pass
-        
-        case _:
-            print("Opcion no Valida")
-            return main()
-
-    # Termina el Input - Crear la reaccion quimica y la balancea.
-
+def balancear():
     react = " + ".join([*reactivos])
     prod  = " + ".join([*productos])
-
-    if react == prod:
-        pass
-
 
     try:  #Inenta generar (chemlib viene con una clase y si no puede generar esa clase es poque el compuesto no existe) la reaccion quimica mediante la formula
         reaccion = Reaction.by_formula(react + "-->" + prod)
@@ -210,9 +199,14 @@ def main(): #main
     get_by_MM()
     get_by_MMol()
     get_PVT()
-    lim_reag(reaccion)
 
-    
-    print(reactivos, "\n\n", productos)
+    #reactivo limitante
+    limitante = lim_reag(reaccion)
+
+    #si queres rintealos y fijate lo que devuelven
+    P = productos
+    R = reactivos
+
+    print(limitante, R, P)
+
     return
-main()   
