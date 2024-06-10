@@ -88,9 +88,6 @@ def get_masses(reaction: Reaction): #en base a una reacion, una cantidad (de mol
 
     return get_PVT()
 
-
-
-
 def get_mass_by_PVT(reaction: Reaction): #saca la masa de un compuesto en base a la presion, volumen y temperatura... y r que es una constante
     compuestos = [x for x in reactivos.keys() if reactivos[x]["P"] is not None and reactivos[x]["V"] is not None and reactivos[x]["T"] is not None] + [x for x in productos.keys() if productos[x]["P"] is not None and productos[x]["V"] is not None and productos[x]["T"] is not None]
     if len(compuestos) == 0:
@@ -134,7 +131,6 @@ def lim_reag(reaction: Reaction):
 
 
 
-
 # Vos tenes que codeart el menu y las funciones de agregar reactivos y productos en abse a los de aca aaaj, es bastanter intuitivo creo. Las parttes de input se remplazan por los inputs de tkinter
 
 
@@ -146,7 +142,7 @@ def agregar_reactivos():
     P   = input("Ingrese la presion: ")
     V   = input("Ingrese el volumen: ")
     T   = input("Ingrese la temperatura: ")
-    MM   = input("Ingrese la concentración molar: ")
+    MM  = input("Ingrese la concentración molar: ")
     
     reactivos[Compound(c).formula] = {
         "mol": None if mol == '' else float(mol),
@@ -187,14 +183,15 @@ def balancear():
     react = " + ".join([*reactivos])
     prod  = " + ".join([*productos])
 
-    try:  #Inenta generar (chemlib viene con una clase y si no puede generar esa clase es poque el compuesto no existe) la reaccion quimica mediante la formula
+    try:
         reaccion = Reaction.by_formula(react + "-->" + prod)
         reaccion.balance()
     except: 
         print("\nReaccion quimica no valida\n")
+        #decir que no se pudo generar la reaccion por datos erroneos
         return
     
-    get_mass_by_PVT(reaccion) #aca va una escaera de intento de conseguir la data. se reiteran funciones hasta que se consiga la data necesaria o toda la que se pueda.
+    get_mass_by_PVT(reaccion)
     get_masses(reaccion)
     get_by_MM()
     get_by_MMol()
@@ -203,10 +200,10 @@ def balancear():
     #reactivo limitante
     limitante = lim_reag(reaccion)
 
-    #si queres rintealos y fijate lo que devuelven
+    #si queres printealos y fijate lo que devuelven
     P = productos
     R = reactivos
 
-    print(limitante, R, P)
+    #mostrar como mas te guste los resultados, recomiendo printearlos para que veas como aparecen 
 
     return
