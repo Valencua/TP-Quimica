@@ -28,7 +28,7 @@ moles_NaCl_formed = moles_HCl
 mass_NaCl = moles_NaCl_formed * molar_mass_NaCl
 
 # Experimento con 40 mL de cada solución
-volume_experiment = float(input("Ingrese experimento de NaOH (mL): "))
+volume_experiment = float(input("Ingrese experimento de HCl (mL): "))
 volume_experiment2 = float(input("Ingrese experimento de NaOH (mL): "))
 
 volume_HCl_experiment = volume_experiment  # mL
