@@ -189,7 +189,7 @@ def balancear():
     P = productos
     R = reactivos
 
-    messagebox.showinfo("Resultado", f"Reactivo limitante: {limitante}\nReactivos: {R}\nProductos: {P}")
+    messagebox.showinfo("Resultado", f"Reactivo limitante: {limitante}\n Reactivos: {R} \n Productos: {P} \n Reacción balanceada: {reaccion.formula}")
 
 def limpiar_entries_reac():
     entry_reactivo.delete(0, tk.END)
